@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom"
 import { format } from 'date-fns';
 import api from './api/posts';
 import useWindowSize from "./hooks/useWindowSize"
+import useAxiosFetch from "./hooks/useAxiosFetch"
 
 
 const App = () => {
@@ -29,25 +30,31 @@ const App = () => {
 
   const { width } = useWindowSize();
 
+  const { data, fetchError, isLoading } = useAxiosFetch('http://localhost:3500/posts');
+  
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await api.get('/posts');
-        setPosts(response.data);
-      } catch (err) {
-        if (err.response) {
-          // Not in the 200 response range 
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error: ${err.message}`);
-        }
-      }
-    }
+    setPosts(data);
+  },[data]);
 
-    fetchPosts();
-  }, [])
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await api.get('/posts');
+  //       setPosts(response.data);
+  //     } catch (err) {
+  //       if (err.response) {
+  //         // Not in the 200 response range 
+  //         console.log(err.response.data);
+  //         console.log(err.response.status);
+  //         console.log(err.response.headers);
+  //       } else {
+  //         console.log(`Error: ${err.message}`);
+  //       }
+  //     }
+  //   }
+
+  //   fetchPosts();
+  // }, [])
 
 
   const handleSubmit = async (e) => {
